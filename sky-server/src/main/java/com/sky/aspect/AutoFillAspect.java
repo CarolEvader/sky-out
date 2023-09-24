@@ -36,15 +36,15 @@ public class AutoFillAspect {
     @Before("autoFillPointCut()")
     public void autoFill(JoinPoint joinPoint) {
         log.info("开始自动填充公共字段");
-        /**
-         * 获取方法上的注解签名
+        /*
+          获取方法上的注解签名
          */
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         AutoFill autoFill = signature.getMethod().getAnnotation(AutoFill.class);
         OperationType operationType = autoFill.value();
 
-        /**
-         * 获取方法的实体对象
+        /*
+          获取方法的实体对象
          */
         Object[] args = joinPoint.getArgs();
         if(args == null || args.length == 0) {
@@ -52,14 +52,14 @@ public class AutoFillAspect {
         }
         Object entity = args[0];
 
-        /**
-         * 准备赋值数据
+        /*
+          准备赋值数据
          */
         LocalDateTime now = LocalDateTime.now();
         Long currentId = BaseContext.getCurrentId();
 
-        /**
-         * 为公共字段赋值
+        /*
+          为公共字段赋值
          */
         if(operationType == OperationType.INSERT) {
             try {
