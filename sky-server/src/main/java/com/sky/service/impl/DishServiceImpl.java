@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -106,5 +107,43 @@ public class DishServiceImpl implements DishService {
         dishMapper.deleteById(ids);
         dishFlavorMapper.deleteByDishIds(ids);
 
+    }
+
+    /**
+     * 根据id获取菜品
+     * @param id
+     * @return
+     */
+    public DishVO getDish(Long id) {
+        Dish dish = dishMapper.getById(id);
+        DishVO dishVO= new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+        dishVO.setFlavors(dishFlavorMapper.getByDishId(id));
+        return dishVO;
+    }
+
+    /**
+     * 修改菜品
+     * @param dishDTO
+     */
+    @Transactional
+    public void update(DishDTO dishDTO) {
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+
+        List<DishFlavor> dishFlavors = dishDTO.getFlavors();
+
+        List<Long> dishId = new ArrayList<>();
+        dishId.add(dishDTO.getId());
+
+        dishMapper.update(dish);
+        dishFlavorMapper.deleteByDishIds(dishId);
+
+        if(dishFlavors != null && !dishFlavors.isEmpty()) {
+            dishFlavors.forEach(dishFlavor -> {
+                dishFlavor.setDishId(dishDTO.getId());
+            });
+            dishFlavorMapper.insertBatch(dishFlavors);
+        }
     }
 }
