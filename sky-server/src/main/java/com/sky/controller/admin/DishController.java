@@ -91,4 +91,18 @@ public class DishController {
         return Result.success();
     }
 
+
+    /**
+     * 菜品起售状态修改
+     * @param status
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("菜品起售状态修改")
+    public Result setStatus(@PathVariable Integer status, Long id) {
+        log.info("菜品起售状态修改：{}", status);
+        dishService.setStatusById(id, status);
+        return Result.success();
+    }
+
 }
