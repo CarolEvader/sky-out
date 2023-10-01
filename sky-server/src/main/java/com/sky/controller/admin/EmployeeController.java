@@ -128,6 +128,11 @@ public class EmployeeController {
         return Result.success(employeeService.getEmployeeById(id));
     }
 
+    /**
+     * 编辑员工信息
+     * @param employeeDTO
+     * @return
+     */
     @PutMapping
     @ApiOperation("编辑员工信息")
     public Result setEmployee(@RequestBody EmployeeDTO employeeDTO) {
